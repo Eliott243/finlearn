@@ -21,5 +21,7 @@ React Native (Expo) · React Navigation · NativeWind · AsyncStorage
 
 ## Play Store
 - Package Android (définitif) : `com.finlearn.app`
-- Politique de confidentialité : publier `docs/` via GitHub Pages → `https://eliott243.github.io/finlearn/privacy.html`
+- Site public : https://eliott243.github.io/finlearn/
+- Politique de confidentialité : https://eliott243.github.io/finlearn/privacy.html
+- Conditions : https://eliott243.github.io/finlearn/terms.html
 - AAB production : `npx eas-cli login` puis `npx eas-cli build -p android --profile production`
