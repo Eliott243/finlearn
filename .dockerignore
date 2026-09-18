@@ -1,0 +1,6 @@
+node_modules
+.expo
+Expo-Go-*.tar.app
+.git
+ios
+android
