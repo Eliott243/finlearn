@@ -5,18 +5,30 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
+    "scheme": "finlearn",
     "userInterfaceStyle": "light",
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.anonymous.FinLearn"
+      "bundleIdentifier": "com.finlearn.app",
+      "infoPlist": {
+        "NSUserNotificationsUsageDescription": "FinLearn envoie une astuce éducative chaque matin si vous l’activez."
+      }
     },
     "android": {
+      "package": "com.finlearn.app",
+      "versionCode": 1,
       "adaptiveIcon": {
         "backgroundColor": "#1B5FDB",
         "foregroundImage": "./assets/android-icon-foreground.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "permissions": [
+        "android.permission.INTERNET",
+        "android.permission.RECEIVE_BOOT_COMPLETED",
+        "android.permission.VIBRATE",
+        "android.permission.POST_NOTIFICATIONS"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -36,7 +48,9 @@
         "expo-notifications",
         {
           "icon": "./assets/icon.png",
-          "color": "#1B9E6E"
+          "color": "#1B9E6E",
+          "sounds": [],
+          "mode": "production"
         }
       ],
       "expo-asset",

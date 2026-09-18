@@ -1,5 +1,4 @@
 import { View, Image, type ImageSourcePropType, type ViewStyle } from 'react-native';
-import Animated from 'react-native-reanimated';
 
 interface GlobeIntroImageProps {
   size: number;
@@ -35,7 +34,6 @@ export function GlobeIntroImage({ size, highlightOpacity = 0, style }: GlobeIntr
         resizeMode="cover"
       />
 
-      {/* Golden glow over Africa region (approximate position on Atlantic-centered globe) */}
       {highlightOpacity > 0 && (
         <View
           pointerEvents="none"
@@ -56,21 +54,5 @@ export function GlobeIntroImage({ size, highlightOpacity = 0, style }: GlobeIntr
         />
       )}
     </View>
-  );
-}
-
-export function AnimatedGlobeIntroImage({
-  size,
-  highlightOpacity = 0,
-  animatedStyle,
-}: {
-  size: number;
-  highlightOpacity?: number;
-  animatedStyle?: ViewStyle;
-}) {
-  return (
-    <Animated.View style={animatedStyle}>
-      <GlobeIntroImage size={size} highlightOpacity={highlightOpacity} />
-    </Animated.View>
   );
 }

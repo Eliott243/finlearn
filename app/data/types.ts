@@ -107,6 +107,7 @@ export type ToolsStackParamList = {
 export type ProfileStackParamList = {
   Profile: undefined;
   Settings: undefined;
+  Legal: undefined;
   CurrencySettings: undefined;
   CertificateCelebration: { level: number };
   CertificateGallery: undefined;

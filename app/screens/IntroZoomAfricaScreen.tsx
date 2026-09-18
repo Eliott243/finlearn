@@ -1,12 +1,5 @@
-import { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, Image } from 'react-native';
-import Animated, {
-  Easing,
-  useAnimatedStyle,
-  useSharedValue,
-  withDelay,
-  withTiming,
-} from 'react-native-reanimated';
+import { useEffect, useRef, useState } from 'react';
+import { View, Text, TouchableOpacity, Image, Animated, Easing } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { GlobeIntroImage } from '../components/GlobeIntroImage';
 
@@ -16,57 +9,43 @@ interface IntroZoomAfricaScreenProps {
 
 export function IntroZoomAfricaScreen({ onDone }: IntroZoomAfricaScreenProps) {
   const [skipVisible, setSkipVisible] = useState(false);
-
   const globeSize = 280;
 
-  const scale = useSharedValue(1);
-  const translateX = useSharedValue(0);
-  const translateY = useSharedValue(0);
-  const logoOpacity = useSharedValue(0);
-  const logoScale = useSharedValue(0.92);
-
-  const globeAnimatedStyle = useAnimatedStyle(() => ({
-    transform: [
-      { translateX: translateX.value },
-      { translateY: translateY.value },
-      { scale: scale.value },
-    ],
-  }));
-
-  const logoAnimatedStyle = useAnimatedStyle(() => ({
-    opacity: logoOpacity.value,
-    transform: [{ scale: logoScale.value }],
-  }));
-
+  const scale = useRef(new Animated.Value(1)).current;
+  const translateX = useRef(new Animated.Value(0)).current;
+  const translateY = useRef(new Animated.Value(0)).current;
+  const logoOpacity = useRef(new Animated.Value(0)).current;
+  const logoScale = useRef(new Animated.Value(0.92)).current;
   const [highlightVisible, setHighlightVisible] = useState(0);
 
   useEffect(() => {
     const showSkip = setTimeout(() => setSkipVisible(true), 1000);
+    const easing = Easing.out(Easing.cubic);
 
-    // Zoom toward Africa (Atlantic-centered globe image)
-    scale.value = withTiming(2.6, {
-      duration: 2200,
-      easing: Easing.out(Easing.cubic),
-    });
-    translateX.value = withTiming(-42, {
-      duration: 2200,
-      easing: Easing.out(Easing.cubic),
-    });
-    translateY.value = withTiming(-18, {
-      duration: 2200,
-      easing: Easing.out(Easing.cubic),
-    });
+    Animated.parallel([
+      Animated.timing(scale, { toValue: 2.6, duration: 2200, easing, useNativeDriver: true }),
+      Animated.timing(translateX, { toValue: -42, duration: 2200, easing, useNativeDriver: true }),
+      Animated.timing(translateY, { toValue: -18, duration: 2200, easing, useNativeDriver: true }),
+    ]).start();
 
     const highlightTimer = setTimeout(() => setHighlightVisible(1), 2050);
 
-    logoOpacity.value = withDelay(
-      2400,
-      withTiming(1, { duration: 450, easing: Easing.out(Easing.cubic) })
-    );
-    logoScale.value = withDelay(
-      2400,
-      withTiming(1, { duration: 450, easing: Easing.out(Easing.cubic) })
-    );
+    Animated.parallel([
+      Animated.timing(logoOpacity, {
+        toValue: 1,
+        duration: 450,
+        delay: 2400,
+        easing,
+        useNativeDriver: true,
+      }),
+      Animated.timing(logoScale, {
+        toValue: 1,
+        duration: 450,
+        delay: 2400,
+        easing,
+        useNativeDriver: true,
+      }),
+    ]).start();
 
     const finish = setTimeout(() => onDone(), 3200);
     return () => {
@@ -74,7 +53,7 @@ export function IntroZoomAfricaScreen({ onDone }: IntroZoomAfricaScreenProps) {
       clearTimeout(highlightTimer);
       clearTimeout(finish);
     };
-  }, [onDone]);
+  }, [onDone, logoOpacity, logoScale, scale, translateX, translateY]);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#0A1628' }}>
@@ -99,19 +78,20 @@ export function IntroZoomAfricaScreen({ onDone }: IntroZoomAfricaScreenProps) {
           </TouchableOpacity>
         )}
 
-        <Animated.View style={globeAnimatedStyle}>
+        <Animated.View
+          style={{ transform: [{ translateX }, { translateY }, { scale }] }}
+        >
           <GlobeIntroImage size={globeSize} highlightOpacity={highlightVisible} />
         </Animated.View>
 
         <Animated.View
-          style={[
-            {
-              position: 'absolute',
-              bottom: 110,
-              alignItems: 'center',
-            },
-            logoAnimatedStyle,
-          ]}
+          style={{
+            position: 'absolute',
+            bottom: 110,
+            alignItems: 'center',
+            opacity: logoOpacity,
+            transform: [{ scale: logoScale }],
+          }}
         >
           <Image
             source={require('../../assets/icon.png')}

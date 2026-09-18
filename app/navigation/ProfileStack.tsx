@@ -7,6 +7,7 @@ import { CertificateCelebrationScreen } from '../screens/CertificateCelebrationS
 import { CertificateGalleryScreen } from '../screens/CertificateGalleryScreen';
 import { ReferralScreen } from '../screens/ReferralScreen';
 import { AvatarsScreen } from '../screens/AvatarsScreen';
+import { LegalScreen } from '../screens/LegalScreen';
 import { Colors } from '../constants/colors';
 
 const Stack = createNativeStackNavigator<ProfileStackParamList>();
@@ -31,6 +32,11 @@ export function ProfileStack() {
         name="Settings"
         component={SettingsScreen}
         options={{ title: 'Paramètres' }}
+      />
+      <Stack.Screen
+        name="Legal"
+        component={LegalScreen}
+        options={{ title: 'Mentions légales' }}
       />
       <Stack.Screen
         name="CurrencySettings"

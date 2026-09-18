@@ -5,6 +5,7 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Ionicons } from '@expo/vector-icons';
 import { DisclaimerBanner } from '../components';
 import { clearProgress } from '../utils/storage';
+import { clearAllLocalData } from '../utils/userData';
 import { useProgress } from '../context/ProgressContext';
 import {
   getPreferences,
@@ -49,6 +50,26 @@ export function SettingsScreen() {
     }
     const updated = await savePreferences({ dailyNotifications: enabled });
     setPrefs(updated);
+  };
+
+  const handleDeleteAllData = () => {
+    Alert.alert(
+      'Supprimer mes données',
+      'Tout le contenu FinLearn sur cet appareil sera effacé (progression, avatars, certificats, caches). Cette action est irréversible.',
+      [
+        { text: 'Annuler', style: 'cancel' },
+        {
+          text: 'Tout supprimer',
+          style: 'destructive',
+          onPress: async () => {
+            await clearAllLocalData();
+            await refreshProgress();
+            setPrefs(await getPreferences());
+            Alert.alert('Données supprimées', 'Relancez l’app pour un nouveau départ.');
+          },
+        },
+      ]
+    );
   };
 
   const handleReset = () => {
@@ -167,6 +188,21 @@ export function SettingsScreen() {
           Fonctionne hors ligne après le premier chargement.{'\n\n'}
           Contenu éducatif, ne constitue pas un conseil en investissement.
         </Text>
+        <TouchableOpacity
+          onPress={() => navigation.navigate('Legal')}
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            marginTop: 16,
+            paddingTop: 16,
+            borderTopWidth: 1,
+            borderTopColor: Colors.border,
+          }}
+        >
+          <Text style={[text.body, { fontWeight: '600' }]}>Mentions légales</Text>
+          <Ionicons name="chevron-forward" size={20} color={Colors.textSecondary} />
+        </TouchableOpacity>
       </View>
 
       <TouchableOpacity
@@ -196,6 +232,21 @@ export function SettingsScreen() {
         onPress={handleReset}
       >
         <Text style={{ color: Colors.danger, fontWeight: '600' }}>Réinitialiser la progression</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={{
+          backgroundColor: 'rgba(196, 92, 92, 0.1)',
+          borderWidth: 1,
+          borderColor: 'rgba(196, 92, 92, 0.3)',
+          borderRadius: 12,
+          paddingVertical: 16,
+          alignItems: 'center',
+          marginTop: 12,
+        }}
+        onPress={handleDeleteAllData}
+      >
+        <Text style={{ color: Colors.danger, fontWeight: '600' }}>Supprimer mes données</Text>
       </TouchableOpacity>
     </ScrollView>
   );

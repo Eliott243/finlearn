@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   View,
   Text,
@@ -6,18 +6,11 @@ import {
   TouchableOpacity,
   Dimensions,
   StyleSheet,
+  Animated,
+  Easing,
 } from 'react-native';
 import ConfettiCannon from 'react-native-confetti-cannon';
 import * as Haptics from 'expo-haptics';
-import Animated, {
-  Easing,
-  useAnimatedStyle,
-  useSharedValue,
-  withDelay,
-  withSequence,
-  withSpring,
-  withTiming,
-} from 'react-native-reanimated';
 import { useAvatars } from '../context/AvatarContext';
 import { AvatarImage } from './ProfileAvatar';
 import { getAvatarById } from '../data/avatars';
@@ -27,8 +20,8 @@ import { Colors } from '../constants/colors';
 export function AvatarUnlockModal() {
   const { pendingUnlock, dismissPendingUnlock } = useAvatars();
   const [showConfetti, setShowConfetti] = useState(false);
-  const scale = useSharedValue(0.6);
-  const opacity = useSharedValue(0.3);
+  const scale = useRef(new Animated.Value(0.6)).current;
+  const opacity = useRef(new Animated.Value(0.3)).current;
 
   const avatar = pendingUnlock ? getAvatarById(pendingUnlock) : null;
 
@@ -38,25 +31,25 @@ export function AvatarUnlockModal() {
     setShowConfetti(true);
     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch(() => {});
 
-    scale.value = 0.6;
-    opacity.value = 0.35;
-    scale.value = withSequence(
-      withSpring(1.15, { damping: 8, stiffness: 180 }),
-      withSpring(1, { damping: 10, stiffness: 200 })
-    );
-    opacity.value = withDelay(
-      200,
-      withTiming(1, { duration: 500, easing: Easing.out(Easing.cubic) })
-    );
+    scale.setValue(0.6);
+    opacity.setValue(0.35);
+    Animated.parallel([
+      Animated.sequence([
+        Animated.spring(scale, { toValue: 1.15, friction: 5, tension: 140, useNativeDriver: true }),
+        Animated.spring(scale, { toValue: 1, friction: 6, tension: 160, useNativeDriver: true }),
+      ]),
+      Animated.timing(opacity, {
+        toValue: 1,
+        duration: 500,
+        delay: 200,
+        easing: Easing.out(Easing.cubic),
+        useNativeDriver: true,
+      }),
+    ]).start();
 
     const t = setTimeout(() => setShowConfetti(false), 3200);
     return () => clearTimeout(t);
   }, [pendingUnlock, opacity, scale]);
-
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: scale.value }],
-    opacity: opacity.value,
-  }));
 
   if (!avatar) return null;
 
@@ -83,7 +76,7 @@ export function AvatarUnlockModal() {
             {avatar.name}
           </Text>
 
-          <Animated.View style={animatedStyle}>
+          <Animated.View style={{ transform: [{ scale }], opacity }}>
             <AvatarImage
               avatarId={avatar.id}
               size={140}

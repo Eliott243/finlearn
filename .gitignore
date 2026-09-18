@@ -39,3 +39,7 @@ yarn-error.*
 # generated native folders
 /ios
 /android
+
+# local Expo Go unpack (never commit)
+Expo-Go-*.tar.app/
+Expo-Go-*.tar.app

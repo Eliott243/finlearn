@@ -1,6 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import type { CurrencyCode } from '../constants/currencies';
 import { CURRENCIES, DEFAULT_CURRENCY } from '../constants/currencies';
+import { isIosSimulator } from './device';
 
 export type { CurrencyCode };
 
@@ -55,6 +56,7 @@ function msSince(iso?: string): number {
 }
 
 export function shouldShowIntro(prefs: UserPreferences): boolean {
+  if (isIosSimulator()) return false;
   if (prefs.forceIntroOnNextLaunch) return true;
   if (!prefs.onboardingComplete) return !prefs.hasSeenIntro;
   return msSince(prefs.lastIntroShownAt) >= INTRO_INTERVAL_MS;

@@ -18,3 +18,8 @@ Contenu 100% éducatif — FinLearn ne fournit aucun conseil en investissement p
 
 ## Stack technique
 React Native (Expo) · React Navigation · NativeWind · AsyncStorage
+
+## Play Store
+- Package Android (définitif) : `com.finlearn.app`
+- Politique de confidentialité : publier `docs/` via GitHub Pages → `https://eliott243.github.io/finlearn/privacy.html`
+- AAB production : `npx eas-cli login` puis `npx eas-cli build -p android --profile production`

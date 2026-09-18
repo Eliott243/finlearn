@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState, useRef } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, Dimensions, Animated, Easing } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import type { RouteProp } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -14,15 +14,6 @@ import { layout, text, components } from '../constants/styles';
 import { Colors } from '../constants/colors';
 import ConfettiCannon from 'react-native-confetti-cannon';
 import * as Haptics from 'expo-haptics';
-import Animated, {
-  Easing,
-  runOnJS,
-  useAnimatedStyle,
-  useSharedValue,
-  withDelay,
-  withSequence,
-  withTiming,
-} from 'react-native-reanimated';
 import {
   hasPassedQuiz,
   isQuizUnlocked,
@@ -53,7 +44,7 @@ export function QuizScreen() {
   const scoreRef = useRef(0);
   const [showConfetti, setShowConfetti] = useState(false);
   const [newCertificateLevel, setNewCertificateLevel] = useState<number | null>(null);
-  const streakScale = useSharedValue(1);
+  const streakScale = useRef(new Animated.Value(1)).current;
 
   if (!module) {
     return (
@@ -90,15 +81,22 @@ export function QuizScreen() {
   const passed = finished && finalScore >= QUIZ_PASS_THRESHOLD;
   const alreadyPassed = hasPassedQuiz(progress, moduleId);
 
-  const streakAnimatedStyle = useAnimatedStyle(() => {
-    return { transform: [{ scale: streakScale.value }] };
-  });
-
   const triggerStreakBounce = () => {
-    streakScale.value = withSequence(
-      withTiming(1.1, { duration: 140, easing: Easing.out(Easing.cubic) }),
-      withTiming(1, { duration: 220, easing: Easing.out(Easing.cubic) })
-    );
+    streakScale.setValue(1);
+    Animated.sequence([
+      Animated.timing(streakScale, {
+        toValue: 1.1,
+        duration: 140,
+        easing: Easing.out(Easing.cubic),
+        useNativeDriver: true,
+      }),
+      Animated.timing(streakScale, {
+        toValue: 1,
+        duration: 220,
+        easing: Easing.out(Easing.cubic),
+        useNativeDriver: true,
+      }),
+    ]).start();
   };
 
   useEffect(() => {
@@ -197,7 +195,7 @@ export function QuizScreen() {
         )}
 
         {passed && !alreadyPassed && (progress.streak ?? 0) > 0 && (
-          <Animated.View style={[{ marginTop: 14 }, streakAnimatedStyle]}>
+          <Animated.View style={{ marginTop: 14, transform: [{ scale: streakScale }] }}>
             <View
               style={{
                 backgroundColor: 'rgba(45, 106, 106, 0.10)',

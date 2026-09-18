@@ -18,6 +18,7 @@ import { checkAvatarsOnStreak } from '../utils/avatarUnlock';
 import { Colors } from '../constants/colors';
 import { IntroZoomAfricaScreen } from '../screens/IntroZoomAfricaScreen';
 import { useAvatars } from '../context/AvatarContext';
+import { isIosSimulator } from '../utils/device';
 import type { UserProgress } from '../data/types';
 
 function MainApp() {
@@ -67,7 +68,7 @@ export function RootNavigator() {
   const loadPrefs = useCallback(async () => {
     const prefs = await getPreferences();
     setOnboardingDone(prefs.onboardingComplete);
-    setShowIntro(shouldShowIntro(prefs));
+    setShowIntro(!isIosSimulator() && shouldShowIntro(prefs));
     setReady(true);
   }, []);
 
