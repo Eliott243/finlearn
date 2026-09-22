@@ -4,22 +4,74 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>FinLearn — Éducation financière</title>
+  <meta name="description" content="Éducation financière pour la francophonie et l’Afrique de l’Ouest et centrale. Contenu éducatif, pas un conseil en investissement." />
   <style>
-    body { font-family: system-ui, sans-serif; max-width: 720px; margin: 48px auto; padding: 0 20px; line-height: 1.55; color: #1A2B3C; }
-    h1 { color: #1F4F4F; margin-bottom: 8px; }
+    :root { color-scheme: light; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, sans-serif;
+      color: #1A2B3C;
+      background: #F8FAFB;
+      line-height: 1.55;
+    }
+    header, main, footer { max-width: 960px; margin: 0 auto; padding: 0 20px; }
+    header { padding-top: 40px; padding-bottom: 8px; }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand img { width: 48px; height: 48px; border-radius: 12px; }
+    h1 { margin: 8px 0 0; color: #1F4F4F; font-size: clamp(1.8rem, 4vw, 2.4rem); }
+    .lead { color: #6B7C8D; max-width: 42rem; }
+    .shots {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin: 32px 0;
+    }
+    .shots img {
+      width: 100%;
+      border-radius: 16px;
+      border: 1px solid #E2E8F0;
+      background: #fff;
+    }
+    .card {
+      background: #fff;
+      border: 1px solid #E2E8F0;
+      border-radius: 16px;
+      padding: 20px;
+      margin: 16px 0 32px;
+    }
     a { color: #2D6A6A; }
-    .card { background: #f6f8f8; border-radius: 16px; padding: 20px; margin: 24px 0; }
+    footer { padding: 24px 20px 48px; color: #6B7C8D; font-size: 14px; }
+    @media (max-width: 800px) {
+      .shots { grid-template-columns: repeat(2, 1fr); }
+    }
   </style>
 </head>
 <body>
-  <h1>FinLearn</h1>
-  <p>Application mobile d’éducation financière pour la francophonie et l’Afrique de l’Ouest et centrale. Contenu éducatif — pas un conseil en investissement.</p>
-  <div class="card">
-    <p>L’app se téléchargera sur le Play Store. En attendant, voici les documents publics :</p>
-    <p>
-      <a href="privacy.html">Politique de confidentialité</a><br />
-      <a href="terms.html">Conditions d’utilisation</a>
-    </p>
-  </div>
+  <header>
+    <div class="brand">
+      <img src="icon.png" alt="FinLearn" width="48" height="48" />
+      <strong>FinLearn</strong>
+    </div>
+    <h1>Éducation financière, ancrée ici.</h1>
+    <p class="lead">Parcours, simulateurs (tontine, inflation, intérêts composés) et fiches ETF pour la francophonie et l’Afrique de l’Ouest et centrale. Contenu éducatif — pas un conseil en investissement.</p>
+  </header>
+  <main>
+    <div class="shots">
+      <img src="screenshots/home.png" alt="Accueil FinLearn" />
+      <img src="screenshots/parcours.png" alt="Parcours d’apprentissage" />
+      <img src="screenshots/outils.png" alt="Outils pédagogiques" />
+      <img src="screenshots/inflation.png" alt="Calculateur d’inflation" />
+    </div>
+    <div class="card">
+      <p>L’app sera sur le Play Store (<code>com.finlearn.app</code>). En attendant :</p>
+      <p>
+        <a href="https://github.com/Eliott243/finlearn">Code source sur GitHub</a><br />
+        <a href="privacy.html">Politique de confidentialité</a><br />
+        <a href="terms.html">Conditions d’utilisation</a>
+      </p>
+    </div>
+  </main>
+  <footer>© 2026 FinLearn · Contenu éducatif, ne constitue pas un conseil en investissement.</footer>
 </body>
 </html>
