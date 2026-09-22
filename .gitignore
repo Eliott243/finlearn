@@ -45,3 +45,7 @@ Expo-Go-*.tar.app/
 Expo-Go-*.tar.app
 
 .railway/
+
+# local AI editor files
+.claude/
+CLAUDE.md
